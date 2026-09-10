@@ -1,0 +1,15 @@
+{
+  "seeds": [1, 2, 3],
+  "max_concurrency": 2,
+  "nodes": [
+    { "id": "outer", "width": 120, "height": 80 },
+    { "id": "inner", "width": 100, "height": 60, "parent": "outer" },
+    { "id": "leaf-a", "width": 70, "height": 30, "parent": "inner" },
+    { "id": "leaf-b", "width": 70, "height": 30, "parent": "inner" },
+    { "id": "sibling", "width": 90, "height": 50, "parent": "outer" }
+  ],
+  "edges": [
+    { "source": "leaf-a", "target": "leaf-b" },
+    { "source": "leaf-a", "target": "sibling" }
+  ]
+}

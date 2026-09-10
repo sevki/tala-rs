@@ -1,0 +1,73 @@
+{
+  "nodes": [
+    {
+      "id": "inner",
+      "x": 32,
+      "y": 32,
+      "width": 134,
+      "height": 148
+    },
+    {
+      "id": "leaf-a",
+      "x": 64,
+      "y": 118,
+      "width": 70,
+      "height": 30
+    },
+    {
+      "id": "leaf-b",
+      "x": 64,
+      "y": 64,
+      "width": 70,
+      "height": 30
+    },
+    {
+      "id": "outer",
+      "x": 0,
+      "y": 0,
+      "width": 198,
+      "height": 286
+    },
+    {
+      "id": "sibling",
+      "x": 32,
+      "y": 204,
+      "width": 90,
+      "height": 50
+    }
+  ],
+  "edges": [
+    {
+      "source": "leaf-a",
+      "target": "leaf-b",
+      "points": [
+        [
+          99,
+          133
+        ],
+        [
+          99,
+          79
+        ]
+      ]
+    },
+    {
+      "source": "leaf-a",
+      "target": "sibling",
+      "points": [
+        [
+          99,
+          133
+        ],
+        [
+          77,
+          133
+        ],
+        [
+          77,
+          229
+        ]
+      ]
+    }
+  ]
+}

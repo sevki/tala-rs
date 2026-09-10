@@ -1,0 +1,62 @@
+{
+  "nodes": [
+    {
+      "id": "child-a",
+      "x": 32,
+      "y": 32,
+      "width": 90,
+      "height": 40
+    },
+    {
+      "id": "child-b",
+      "x": 146,
+      "y": 32,
+      "width": 90,
+      "height": 40
+    },
+    {
+      "id": "child-c",
+      "x": 260,
+      "y": 32,
+      "width": 90,
+      "height": 40
+    },
+    {
+      "id": "container",
+      "x": 0,
+      "y": 0,
+      "width": 382,
+      "height": 104
+    }
+  ],
+  "edges": [
+    {
+      "source": "child-a",
+      "target": "child-b",
+      "points": [
+        [
+          77,
+          52
+        ],
+        [
+          191,
+          52
+        ]
+      ]
+    },
+    {
+      "source": "child-b",
+      "target": "child-c",
+      "points": [
+        [
+          191,
+          52
+        ],
+        [
+          305,
+          52
+        ]
+      ]
+    }
+  ]
+}

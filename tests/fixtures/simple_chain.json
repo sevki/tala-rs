@@ -1,0 +1,13 @@
+{
+  "seeds": [1, 2, 3],
+  "max_concurrency": 2,
+  "nodes": [
+    { "id": "a", "width": 80, "height": 40 },
+    { "id": "b", "width": 80, "height": 40 },
+    { "id": "c", "width": 80, "height": 40 }
+  ],
+  "edges": [
+    { "source": "a", "target": "b" },
+    { "source": "b", "target": "c" }
+  ]
+}
