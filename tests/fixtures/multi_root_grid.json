@@ -1,0 +1,13 @@
+{
+  "seeds": [1, 2, 3, 4],
+  "max_concurrency": 4,
+  "nodes": [
+    { "id": "n1", "width": 60, "height": 60 },
+    { "id": "n2", "width": 60, "height": 60 },
+    { "id": "n3", "width": 60, "height": 60 },
+    { "id": "n4", "width": 60, "height": 60 },
+    { "id": "n5", "width": 60, "height": 60 },
+    { "id": "n6", "width": 60, "height": 60 }
+  ],
+  "edges": []
+}

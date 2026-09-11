@@ -217,7 +217,6 @@ struct AttemptResult {
     score: Score,
 }
 
-#[must_use]
 pub fn default_layout(graph: &mut Graph) -> Result<()> {
     layout(graph, None)
 }
@@ -256,8 +255,7 @@ fn default_max_concurrency() -> usize {
     thread::available_parallelism()
         .map(|count| count.get())
         .unwrap_or(1)
-        .min(DEFAULT_MAX_CONCURRENCY)
-        .max(1)
+        .clamp(1, DEFAULT_MAX_CONCURRENCY)
 }
 
 fn layout_plan(graph: &Graph, options: Option<&Options>) -> Result<LayoutPlan> {
@@ -374,6 +372,9 @@ fn validate_graph(graph: &Graph) -> Result<GraphMetadata> {
 fn run_seed_attempts(graph: Graph, seeds: &[i64], max_concurrency: usize) -> Result<AttemptResult> {
     let worker_count = max_concurrency.min(seeds.len()).max(1);
     let graph = Arc::new(graph);
+    // `seeds` is borrowed, but the queue is shared with `'static` worker
+    // threads below, so an owned copy is required here.
+    #[allow(clippy::unnecessary_to_owned)]
     let jobs = Arc::new(Mutex::new(seeds.to_vec().into_iter().enumerate()));
     let (tx, rx) = mpsc::channel();
 
@@ -536,20 +537,20 @@ fn arrange_siblings(
 
     let mut occupied = Vec::with_capacity(siblings.len());
     for &index in siblings {
-        if graph.nodes[index].fixed {
-            if let Some(position) = graph.nodes[index].position {
-                positions.insert(index, position);
-                let size = cache.subtree_sizes.get(&index).copied().unwrap_or(Size {
-                    width: graph.nodes[index].width,
-                    height: graph.nodes[index].height,
-                });
-                occupied.push(Rect {
-                    x: position.x,
-                    y: position.y,
-                    width: size.width,
-                    height: size.height,
-                });
-            }
+        if graph.nodes[index].fixed
+            && let Some(position) = graph.nodes[index].position
+        {
+            positions.insert(index, position);
+            let size = cache.subtree_sizes.get(&index).copied().unwrap_or(Size {
+                width: graph.nodes[index].width,
+                height: graph.nodes[index].height,
+            });
+            occupied.push(Rect {
+                x: position.x,
+                y: position.y,
+                width: size.width,
+                height: size.height,
+            });
         }
     }
 
