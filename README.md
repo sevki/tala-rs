@@ -48,10 +48,10 @@ CI (`.github/workflows/ci.yml`) runs two jobs on every push and pull request:
 - **`upstream-compat`** — a small Go harness under `compat/` (pinned to a
   specific `github.com/d2lang/d2` version) that runs the *same* fixtures
   through the real upstream `d2talalayout` engine and asserts the same
-  structural invariants. tala-rs isn't expected to produce byte-identical
-  coordinates to upstream, but it is expected to satisfy the same layout
-  guarantees; this job catches drift from that contract in either
-  direction.
+  structural invariants. It does not invoke tala-rs or compare outputs, so
+  a tala-rs regression only shows up in the `rust` job's own suite; this
+  job instead catches upstream drifting away from the layout guarantees
+  tala-rs is a port of.
 
 New fixtures should be added to `tests/fixtures/` (nodes list parents
 before their children); both jobs pick them up automatically.

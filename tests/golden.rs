@@ -124,7 +124,9 @@ fn snapshot(graph: &Graph) -> Snapshot {
         .nodes
         .iter()
         .map(|node| {
-            let position = node.position.unwrap_or_default();
+            let position = node
+                .position
+                .unwrap_or_else(|| panic!("layout left node `{}` without a position", node.id));
             SnapshotNode {
                 id: node.id.clone(),
                 x: position.x,
@@ -242,7 +244,9 @@ impl Rect {
 }
 
 fn node_rect(node: &Node) -> Rect {
-    let position = node.position.unwrap_or_default();
+    let position = node
+        .position
+        .unwrap_or_else(|| panic!("layout left node `{}` without a position", node.id));
     Rect {
         x: position.x,
         y: position.y,
@@ -299,6 +303,12 @@ fn assert_no_unrelated_overlaps(graph: &Graph, fixture: &str) {
 
 fn assert_edges_are_orthogonal(graph: &Graph, fixture: &str) {
     for edge in &graph.edges {
+        assert!(
+            edge.points.len() >= 2,
+            "fixture `{fixture}`: edge `{}`->`{}` has fewer than two route points",
+            edge.source,
+            edge.target
+        );
         for segment in edge.points.windows(2) {
             assert!(
                 segment[0].x == segment[1].x || segment[0].y == segment[1].y,

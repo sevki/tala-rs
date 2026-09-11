@@ -1,13 +1,12 @@
-// Package compat cross-checks tala-rs against upstream D2's d2talalayout
-// engine. It does not expect byte-identical coordinates (tala-rs is an
-// independent port, not a line-for-line translation) — instead it runs the
-// same fixtures (shared with the Rust golden tests in ../tests/fixtures)
-// through the real upstream engine and asserts the same structural
-// invariants that ../tests/golden.rs asserts for tala-rs: no unrelated
-// node overlaps, orthogonal edge routing, and children contained within
-// their parent's bounds. A tala-rs regression that violates these
-// guarantees, or an upstream behavior change that stops satisfying them,
-// should show up here.
+// Package compat checks upstream D2's d2talalayout engine for invariant
+// drift. It does not invoke tala-rs or compare against its output — it runs
+// the same fixtures (shared with the Rust golden tests in
+// ../tests/fixtures) through the real upstream engine and asserts the same
+// structural invariants that ../tests/golden.rs asserts for tala-rs: no
+// unrelated node overlaps, orthogonal edge routing, and children contained
+// within their parent's bounds. tala-rs regressions against those
+// invariants only show up in the Rust suite; this package only catches
+// upstream drifting away from them.
 package compat
 
 import (
@@ -16,6 +15,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/d2lang/d2/d2graph"
@@ -116,7 +116,7 @@ func buildGraph(t *testing.T, f fixture) *d2graph.Graph {
 			obj.Left = &d2graph.Scalar{Value: fmt.Sprintf("%d", *n.X)}
 			obj.Top = &d2graph.Scalar{Value: fmt.Sprintf("%d", *n.Y)}
 		}
-		parent.Children[obj.ID] = obj
+		parent.Children[strings.ToLower(obj.ID)] = obj
 		parent.ChildrenArray = append(parent.ChildrenArray, obj)
 		g.Objects = append(g.Objects, obj)
 		objects[n.ID] = obj
@@ -200,6 +200,10 @@ func TestFixturesSatisfyStructuralInvariants(t *testing.T) {
 			}
 
 			for _, edge := range g.Edges {
+				if len(edge.Route) < 2 {
+					t.Errorf("edge %q->%q has fewer than two route points", edge.Src.ID, edge.Dst.ID)
+					continue
+				}
 				for k := 0; k+1 < len(edge.Route); k++ {
 					a, b := edge.Route[k], edge.Route[k+1]
 					if a.X != b.X && a.Y != b.Y {
